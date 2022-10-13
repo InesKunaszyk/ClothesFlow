@@ -1,8 +1,6 @@
 from django.shortcuts import render
 
 # Create your views here.
-
-from django.shortcuts import render
 from django.views.generic import View
 
 
@@ -28,7 +26,6 @@ class RegisterView(View):
 
 
 class LoginView(View):
-    template_name = 'user/login.html'
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+    def get(self, request):
+        return render (request, 'user/login.html')
