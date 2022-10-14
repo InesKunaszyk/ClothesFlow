@@ -8,15 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <link rel="stylesheet" href={% static "css/style.css" %}/>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-  {% block header %}
-  <header>
+    <header>
       <nav class="container container--70">
         <ul class="nav--actions">
           <li><a href="#">Zaloguj</a></li>
-          <li class="highlighted"><a href="#">Załóż konto</a></li>
+          <li class="highlighted"><a href="{% url 'register' %}">Załóż konto</a></li>
         </ul>
 
         <ul>
@@ -28,8 +27,8 @@
         </ul>
       </nav>
     </header>
-  {% endblock %}
 
+    {% block content %}
     <section class="login-page">
       <h2>Zaloguj się</h2>
       <form>
@@ -42,13 +41,14 @@
         </div>
 
         <div class="form-group form-group--buttons">
-          <a href="#" class="btn btn--without-border">Załóż konto</a>      
-          <button class="btn" type="submit">Zaloguj się</button> 
+          <a href="{% url 'register' %}" class="btn btn--without-border">Załóż konto</a>
+          <button class="btn" type="submit">Zaloguj się</button>
         </div>
       </form>
     </section>
+    {% endblock %}
 
-    {% block footer %}
+    {%block footer%}
     <footer>
         <div class="contact">
           <h2>Skontaktuj się z nami</h2>
@@ -71,14 +71,11 @@
         <div class="bottom-line">
           <span class="bottom-line--copy">Copyright &copy; 2018</span>
           <div class="bottom-line--icons">
-            <a href="#" class="btn btn--small"><img src={% static "images/icon-facebook.svg" %}/></a>
-            <a href="#" class="btn btn--small"><img src={% static "images/icon-instagram.svg" %/></a>
+            <a href="#" class="btn btn--small"><img src="images/icon-facebook.svg"/></a>
+            <a href="#" class="btn btn--small"><img src="images/icon-instagram.svg"/></a>
           </div>
         </div>
       </footer>
-    {% endblock %}
-
-  {% block script %}
-  {% endblock %}
+      {% endblock %}
   </body>
 </html>
