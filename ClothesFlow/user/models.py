@@ -13,10 +13,6 @@ from .managers import UserManager
 class User(AbstractUser):
     username = None
     email = models.EmailField(gettext('email address'), unique=True)
-    first_name = models.CharField(gettext('First name'), max_length=32, blank=True)
-    last_name = models.CharField(gettext('Last name'), max_length=32, blank=True)
-    date_joined = models.DateTimeField(gettext('Date joined'), auto_now_add=True)
-    is_active = models.BooleanField(gettext('Active'), default=True)
 
     objects = UserManager()
 
@@ -26,7 +22,10 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['is_staff', 'is_active']
     # list of the field names that will be neccessary during creating a user via CREATESUPERUSER management command
 
+    def __str__(self):
+        return self.email
 
+    
 class Category(models.Model):
     name = models.CharField(max_length=64, blank=False)
 

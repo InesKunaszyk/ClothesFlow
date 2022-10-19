@@ -117,8 +117,11 @@
               <div class="subtitle">{{i.description}}</div>
             </div>
 
-            <div class="col"><div class="text">{{i.categories}}</div></div>
-
+            <div class="col">
+              {% for cat in i.categories.all %}
+              <div class="text">{{cat.name}}</div>
+              {% endfor %}
+            </div>
           </li>
           {% endfor %}
         </ul>
@@ -148,9 +151,10 @@
               <div class="title">{{i.name}}</div>
               <div class="subtitle">{{i.description}}</div>
             </div>
-
-            <div class="col"><div class="text">{{i.categories}}</div></div>
-
+            {% for cat in i.categories.all %}
+            <div class="col"><div class="text">{{cat.name}}</div>
+            {% endfor %}
+            </div>
           </li>
           {% endfor %}
 
@@ -176,9 +180,10 @@
               <div class="title">{{i.name}}</div>
               <div class="subtitle">{{i.description}}</div>
             </div>
-
-            <div class="col"><div class="text">{{i.categories}}</div></div>
-
+             {% for cat in i.categories.all %}
+            <div class="col"><div class="text">{{cat.name}},</div>
+            {% endfor %}
+            </div>
           </li>
           {% endfor %}
 

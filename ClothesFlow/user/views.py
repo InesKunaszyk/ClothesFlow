@@ -9,6 +9,8 @@ from django.urls import reverse_lazy
 
 from django.views.generic import View, FormView
 
+from .forms import UserCreateForm, UserLoginForm
+
 from .models import Donation, Institution
 
 User = get_user_model()
@@ -42,47 +44,46 @@ class AddDonationView(View):
         return render(request, self.template_name)
 
 
-class RegisterView(View):
+class RegisterView(FormView):
+    form_class = UserCreateForm
     template_name = 'user/register.html'
-    # success_url = reverse_lazy('login')
+    success_url = reverse_lazy('login')
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-
-    def post(self, request):
-        name = request.POST['name']
-        surname = request.POST['surname']
-        email = request.POST['email']
-        password = request.POST['password']
-        password2 = request.POST['password2']
-
-        if email is None:
-            raise ValueError('Email jest niezbędny do rejestracji. Podaj email.')
-
-        if password != password2:
-            raise ValueError('Hasła musza być takie same!')
-
+    def form_valid(self, form):
+        cd = form.cleaned_data
+        first_name = cd.get('name')
+        last_name = cd.get('surname')
+        email = cd.get('email')
+        password = cd.get('password')
         user = User.objects.create_user(
-            first_name=name,
-            last_name=surname,
+            first_name=first_name,
+            last_name=last_name,
             email=email,
             password=password,
         )
         user = authenticate(email=email, password=password)
         login(self.request, user)
-        return render(request, 'user/login.html')
+        return super().form_valid(form)
 
 
-class LoginView(View):
+class LoginView(FormView):
+    form_class = UserLoginForm
     template_name = 'user/login.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('landing_page')
 
+    def form_valid(self, form):
+        cd = form.cleaned_data
+        email = cd.get("email")
+        password = cd.get("password")
+        user = authenticate(email=email, password=password)
+        login(self.request, user)
+        return super().form_valid(form)
+
+
+class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-    def post(self, ):
-        pass
+        logout(request)
+        return redirect("login")
 
 
 class ConfirmationView(View):
