@@ -14,9 +14,10 @@
   {% block header %}
   <header class="header--form-page">
       <nav class="container container--70">
+        {% if user.is_authenticated %}
         <ul class="nav--actions">
           <li class="logged-user">
-            Witaj Agata
+            Witaj {{user.first_name}},
             <ul class="dropdown">
               <li><a href="#">Profil</a></li>
               <li><a href="#">Ustawienia</a></li>
@@ -24,6 +25,7 @@
             </ul>
           </li>
         </ul>
+        {% endif %}
 
         <ul>
           <li><a href="../#" class="btn btn--without-border active">Start</a></li>
