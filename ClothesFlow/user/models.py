@@ -2,7 +2,29 @@ from django.db import models
 
 from phone_field import PhoneField
 
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth.models import PermissionsMixin
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext
+
+from .managers import UserManager
+
+
+class User(AbstractUser):
+    username = None
+    email = models.EmailField(gettext('email address'), unique=True)
+    first_name = models.CharField(gettext('First name'), max_length=32, blank=True)
+    last_name = models.CharField(gettext('Last name'), max_length=32, blank=True)
+    date_joined = models.DateTimeField(gettext('Date joined'), auto_now_add=True)
+    is_active = models.BooleanField(gettext('Active'), default=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    # STRING DESCRIBING FIELD ON THE USER MODEL THAT IS USED AS THE UNIQUE IDENTIFIER
+    # - USUALLY 'USERNAME' BUT IT CAN ALSO BE AN EMAIL ADDRESS OR OTHER UNIQUE FIELD
+    REQUIRED_FIELDS = ['is_staff', 'is_active']
+    # list of the field names that will be neccessary during creating a user via CREATESUPERUSER management command
 
 
 class Category(models.Model):
@@ -27,12 +49,12 @@ class Donation(models.Model):
     quantity = models.PositiveIntegerField()
     categories = models.ManyToManyField(Category)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
-    address = models.CharField(max_length=128, default='ul.Długa 44/4')
-    phone_number = PhoneField(blank=True, help_text = 'Contact Phone Number')
+    address = models.CharField(max_length=128,)
+    phone_number = PhoneField(blank=True, help_text='Contact Phone Number')
     city = models.CharField(max_length=32)
     zip_code = models.CharField(max_length=6)
     pick_up_date = models.DateField(null=False, blank=False, help_text='2022-12-12')
     pick_up_time = models.TimeField(null=False, blank=False, help_text='12:00')
     pick_up_comment = models.TextField(max_length=1024)
-    user = models.ForeignKey(User, null=True, default=None, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
 
