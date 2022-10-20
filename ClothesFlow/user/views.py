@@ -1,17 +1,19 @@
 
 import random
 from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ImproperlyConfigured
 
 from django.core.paginator import Paginator
 from django.db.models import Sum, Count
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
-from django.views.generic import View, FormView
+from django.views.generic import View, CreateView, FormView
 
 from .forms import UserCreateForm, UserLoginForm
 
-from .models import Donation, Institution
+from .models import Donation, Institution, Category
 
 User = get_user_model()
 
@@ -37,11 +39,19 @@ class LandingPageView(View):
                                                     })
 
 
-class AddDonationView(View):
+class AddDonationView(LoginRequiredMixin, View):
     template_name = 'user/form.html'
+    login_url = 'login'
+    permission_denied_message = 'Aby przekazać dary musisz być zalogowany.'
+    redirect_field_name = 'add_donation'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        categories = Category.objects.all()
+        organizations = Institution.objects.all()
+
+        return render(request, self.template_name, {'categories': categories,
+                                                    'organizations': organizations,
+                                                    })
 
 
 class RegisterView(FormView):
@@ -78,6 +88,9 @@ class LoginView(FormView):
         user = authenticate(email=email, password=password)
         login(self.request, user)
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return redirect('register')
 
 
 class UserLogoutView(View):

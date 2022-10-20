@@ -21,6 +21,7 @@ from user.views import (
     AddDonationView,
     RegisterView,
     LoginView,
+    UserLogoutView,
     ConfirmationView,
 )
 
@@ -31,5 +32,6 @@ urlpatterns = [
     path('add_donation/', AddDonationView.as_view(), name='add_donation'),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
     path('conf/', ConfirmationView.as_view(), name='conf'),
     ]

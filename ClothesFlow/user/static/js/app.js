@@ -235,7 +235,20 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
       // TODO: get data from inputs and show them in summary
+
     }
+
+    }
+
+    //  STEP 1 - CATEGORIES
+
+    // / STEP 2
+
+    // STEP 3
+
+  // STEP 4
+
+  // STEP 5
 
     /**
      * Submit form

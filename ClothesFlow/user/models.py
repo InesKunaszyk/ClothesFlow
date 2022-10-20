@@ -29,8 +29,6 @@ class User(AbstractUser):
 class Category(models.Model):
     name = models.CharField(max_length=64, blank=False)
 
-    def __str__(self):
-        return self.name
 
 INSTITUTION_CHOICES = (
     (1, 'FOUNDATION'),
