@@ -118,9 +118,11 @@
             </div>
 
             <div class="col">
-              {% for cat in i.categories.all %}
-              <div class="text">{{cat.name}}</div>
-              {% endfor %}
+              <div class="text">
+                {% for cat in i.categories.all%}
+                {{cat.name}},
+                {%endfor%}
+              </div>
             </div>
           </li>
           {% endfor %}
@@ -151,9 +153,13 @@
               <div class="title">{{i.name}}</div>
               <div class="subtitle">{{i.description}}</div>
             </div>
-            {% for cat in i.categories.all %}
-            <div class="col"><div class="text">{{cat.name}}</div>
-            {% endfor %}
+
+            <div class="col">
+              <div class="text">
+              {% for cat in i.categories.all%}
+              {{cat.name}},
+              {%endfor%}
+              </div>
             </div>
           </li>
           {% endfor %}
@@ -180,9 +186,13 @@
               <div class="title">{{i.name}}</div>
               <div class="subtitle">{{i.description}}</div>
             </div>
-             {% for cat in i.categories.all %}
-            <div class="col"><div class="text">{{cat.name}},</div>
-            {% endfor %}
+
+            <div class="col">
+              <div class="text">
+                {% for cat in i.categories.all%}
+                {{cat.name}},
+                {%endfor%}
+              </div>
             </div>
           </li>
           {% endfor %}
