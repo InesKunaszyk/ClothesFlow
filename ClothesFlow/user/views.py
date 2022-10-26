@@ -90,7 +90,12 @@ class LoginView(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        return redirect('register')
+        cd = form.cleaned_data
+        email = cd.get("email")
+        password = cd.get("password")
+        if email not in User.objects.filter(email=email):
+            return redirect('register')
+        # else:
 
 
 class UserLogoutView(View):

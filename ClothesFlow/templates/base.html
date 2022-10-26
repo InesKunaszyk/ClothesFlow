@@ -1,56 +1,56 @@
 {% load static %}
 
-<!DOCTYPE html>
+!DOCTYPE html
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <link rel="stylesheet" href={% static "css/style.css" %}  />
+    <link rel="stylesheet" href='{% static "css/style.css" %}'  />
   </head>
 <body>
-
-    <header>
-        <nav class="container container--70">
-        {% if user.is_authenticated %}
-            <ul class="nav--actions">
-              <li class="logged-user">
-                Witaj {{user.first_name}},
-                <ul class="dropdown">
-                  <li><a href="#">Profil</a></li>
-                  <li><a href="#">Ustawienia</a></li>
-                  <li><a href="{% url 'logout' %}">Wyloguj</a></li>
-                </ul>
-              </li>
-            </ul><br>
-            {% else %}
-            <ul>
-              <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
-              <li class="highlighted"><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
-            </ul>
+<!-- //--------------------------- header content -------------------------// -->
+{% block header %}
+<ul class="nav--actions">
+      {% if user.is_authenticated %}
+      <li class="logged-user">
+        Witaj {% if user.is_superuser%} ADMINISTRATORZE {% else %} {{ user.first_name }} {% endif %}
+        <ul class="dropdown">
+            <li><a href="">Profil</a></li>
+            <li><a href="">Ustawienia</a></li>
+            {% if user.is_authenticated and user.is_superuser %}
+            <li><a href="/admin/">Panel administracyjny</a></li>
             {% endif %}
+            <li><a href="{% url 'logout' %}">Wyloguj</a></li>
+        </ul>
+      </li>
+{% else %}
+            <li><a href="{% url 'login' %}" class="btn btn--small btn--without-border">Zaloguj</a></li>
+            <li><a href="{% url 'register' %}" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+{% endif %}
 
-            <ul>
-              <li><a href="../#" class="btn btn--without-border active">Start</a></li>
-              <li><a href="../#steps" class="btn btn--without-border">O co chodzi?</a></li>
-              <li><a href="../#about-us" class="btn btn--without-border">O nas</a></li>
-              <li><a href="../#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
-              <li><a href="{% url 'add_donation' %}" class="btn btn--without-border">Przekaż dary</a></li>
-              <li><a href="../#contact" class="btn btn--without-border">Kontakt</a></li>
-            </ul>
-        </nav>
-    </header>
+</ul>
 
-    <h3><li><a href="{% url 'logout' %}">Wyloguj</a></li></h3>
-    {% block header %}
-    {% endblock %}
-
-    {% block content %}
-    {% endblock %}
+<ul>
+  <li><a href="/" class="btn btn--without-border active">Start</a></li>
+  <li><a href="/#steps" class="btn btn--without-border">O co chodzi?</a></li>
+  <li><a href="/#about-us" class="btn btn--without-border">O nas</a></li>
+  <li><a href="/#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
+  <li><a href="/add_donation" class="btn btn--without-border">Przekaż dary</a></li>
+  <li><a href="#contact" class="btn btn--without-border">Kontakt</a></li>
+</ul>
 
 
-    {% block footer %}
+{% endblock header %}
+<!-- //--------------------------- header content end ------------------------// -->
+
+<!-- //--------------------------- block content -------------------------// -->
+{% block content %}
+{% endblock %}
+<!-- //--------------------------- header content end -------------------------// -->
+
+<!-- //--------------------------- footer content -------------------------// -->
     <footer>
       <div id="contact" class="contact">
         <h2>Skontaktuj się z nami</h2>
@@ -67,14 +67,12 @@
       <div class="bottom-line">
         <span class="bottom-line--copy">Copyright &copy; 2019</span>
         <div class="bottom-line--icons">
-          <a href="#" class="btn btn--small"><img src={% static "images/icon-facebook.svg" %}/></a>
-          <a href="#" class="btn btn--small"><img src={% static "images/icon-instagram.svg" %}/></a>
+          <a href="#" class="btn btn--small"><img src='{% static "images/icon-facebook.svg" %}'/></a>
+          <a href="#" class="btn btn--small"><img src='{% static "images/icon-instagram.svg" %}'/></a>
         </div>
       </div>
     </footer>
-    {% endblock %}
-
-{% block script %}
-{% endblock %}
+<!-- //--------------------------- footer content end -------------------------// -->
+    <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

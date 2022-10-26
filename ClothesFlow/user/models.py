@@ -27,7 +27,10 @@ class User(AbstractUser):
 
     
 class Category(models.Model):
-    name = models.CharField(max_length=64, blank=False)
+    name = models.CharField(max_length=64, blank=False, verbose_name='Kategoria')
+
+    def __str__(self):
+        return self.name
 
 
 INSTITUTION_CHOICES = (
@@ -38,10 +41,13 @@ INSTITUTION_CHOICES = (
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=64, blank=False, unique=True)
-    description = models.TextField(blank=False)
-    type = models.CharField(max_length=2, choices=INSTITUTION_CHOICES, default='FOUNDATION')
-    categories = models.ManyToManyField(Category)
+    name = models.CharField(max_length=64, blank=False, unique=True, verbose_name='Nazwa insytyucji')
+    description = models.TextField(blank=False, verbose_name='Opis instytucji')
+    type = models.CharField(max_length=2, choices=INSTITUTION_CHOICES, default='FOUNDATION', verbose_name='Rodzaj instytucji')
+    categories = models.ManyToManyField(Category, verbose_name='Kategorie')
+
+    def __str__(self):
+        return f"NAZWA: {self.name}"
 
 
 class Donation(models.Model):

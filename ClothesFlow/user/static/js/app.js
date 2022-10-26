@@ -235,20 +235,50 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
       // TODO: get data from inputs and show them in summary
+//       const btn = document.getElementById('donation-confirmation');
+//     btn.addEventListener('click', e => {
+//       document.getElementById("summary-quantity").textContent = document.getElementById('bags').value;
+//       document.querySelectorAll(".form-section--column ul li")[0].textContent = document.getElementById('address').value;
+//       document.querySelectorAll(".form-section--column ul li")[1].textContent = document.getElementById('city').value;
+//       document.querySelectorAll(".form-section--column ul li")[2].textContent = document.getElementById('zip_code').value;
+//       document.querySelectorAll(".form-section--column ul li")[3].textContent = document.getElementById('phone_number').value;
+//       document.querySelectorAll(".form-section--column ul li")[4].textContent = document.getElementById('pick_up_date').value;
+//       document.querySelectorAll(".form-section--column ul li")[5].textContent = document.getElementById('pick_up_time').value;
+//       document.querySelectorAll(".form-section--column ul li")[6].textContent = document.getElementById('pick_up_comment').value;
+//       const institutionInputs = document.getElementsByName('institution')
+//       institutionInputs.forEach(function (i) {
+//         if (i.checked) {
+//           const institution = i.parentElement.children[2].firstElementChild.innerHTML;
+//           document.getElementById("summary-institution").textContent = "Dla fundacji " + '"' + institution + '"';
+//     }
+//   })
+// })
 
+      const form = document.getElementById("info");
+      const btn = document.getElementById('donation-confirmation');
+
+
+      btn.addEventListener( 'click', function(e) {
+        e.preventDefault();
+
+        const summary = new FormData(form)
+
+        console.log([...summary])
+
+        fetch('conf', {
+          method: 'POST',
+          body: summary,
+        })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Success:', data);
+              document.getElementById('form').value='';
+            })
+            .catch(err => {
+              console.log('Error:', err);
+            });
+      });
     }
-
-    }
-
-    //  STEP 1 - CATEGORIES
-
-    // / STEP 2
-
-    // STEP 3
-
-  // STEP 4
-
-  // STEP 5
 
     /**
      * Submit form
@@ -256,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: validation, send data to server
      */
     submit(e) {
-      e.preventDefault();
+
       this.currentStep++;
       this.updateForm();
     }
@@ -266,3 +296,4 @@ document.addEventListener("DOMContentLoaded", function() {
     new FormSteps(form);
   }
 });
+

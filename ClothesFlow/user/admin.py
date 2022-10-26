@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from user.models import (User, Institution)
+
+
+@admin.register(Institution)
+class InstitutionAdmin(admin.ModelAdmin):
+    list = ('name', 'type')
+    # exclude = ['added_date']
