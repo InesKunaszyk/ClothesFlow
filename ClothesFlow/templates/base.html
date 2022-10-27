@@ -1,6 +1,6 @@
 {% load static %}
 
-!DOCTYPE html
+<!DOCTYPE html>
 <html lang="pl">
   <head>
     <meta charset="UTF-8" />
@@ -17,7 +17,7 @@
       <li class="logged-user">
         Witaj {% if user.is_superuser%} ADMINISTRATORZE {% else %} {{ user.first_name }} {% endif %}
         <ul class="dropdown">
-            <li><a href="">Profil</a></li>
+            <li><a href="{% url "profile" user.pk %}">Profil</a></li>
             <li><a href="">Ustawienia</a></li>
             {% if user.is_authenticated and user.is_superuser %}
             <li><a href="/admin/">Panel administracyjny</a></li>

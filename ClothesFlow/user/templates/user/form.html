@@ -60,7 +60,7 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form action="" method="post" name="form" id="info">
+        <form action="" method="post" name="form" id="form-data">
           {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
@@ -93,7 +93,7 @@
             <div class="form-group form-group--inline">
               <label>
                 Liczba 60l worków:
-                <input type="number" step="1" min="1"  name="bags" id="bags"/>
+                <input type="number" step="1" min="1" name='bag' id="bags"/>
               </label>
             </div>
 
@@ -112,10 +112,10 @@
             {% for o in organizations %}
             <div class="form-group form-group--checkbox">
               <label>
-                <input type="radio" name="institution" value="old" id="institution-label" value="{{o.id}}"/>
+                <input type="radio" name="institution" id="institution-id" value="{{o.id}}"/>
                 <span class="checkbox radio"></span>
                 <span class="description">
-                  <div class="title">{{o.name}}</div>
+                  <div class="title" id="institution-name">{{o.name}}</div>
                   <div class="subtitle">
                     {{o.description}}
                       {% for cat in o.categories.all %}
@@ -194,16 +194,12 @@
                 <ul>
                   <li>
                     <span class="icon icon-bag"></span>
-                    <span class="summary--text" id="summary_quantity"
-                      >4 worki ubrań w dobrym stanie dla dzieci</span
-                    >
+                    <span class="summary--text" id="summary-quantity"></span>
                   </li>
 
                   <li>
                     <span class="icon icon-hand"></span>
-                    <span class="summary--text" id="summary_institution"
-                      >Dla fundacji "Mam marzenie" w Warszawie</span
-                    >
+                    <span class="summary--text" id="summary-institution"></span>
                   </li>
                 </ul>
               </div>

@@ -41,13 +41,10 @@ INSTITUTION_CHOICES = (
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=64, blank=False, unique=True, verbose_name='Nazwa insytyucji')
+    name = models.CharField(max_length=64, blank=False, unique=True, verbose_name='Nazwa instytucji')
     description = models.TextField(blank=False, verbose_name='Opis instytucji')
     type = models.CharField(max_length=2, choices=INSTITUTION_CHOICES, default='FOUNDATION', verbose_name='Rodzaj instytucji')
     categories = models.ManyToManyField(Category, verbose_name='Kategorie')
-
-    def __str__(self):
-        return f"NAZWA: {self.name}"
 
 
 class Donation(models.Model):

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from django.contrib.auth.forms import UserCreationForm
 
@@ -51,3 +52,18 @@ class UserLoginForm(forms.Form):
         user = authenticate(email=email, password=password)
         if user is None:
             raise ValidationError("Nieprawidłowe dane logowania")
+
+
+class UserProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    name = forms.CharField()
+    surname = forms.CharField
+    email = forms.EmailField(required=True, validators=[validate_email])
+    password = forms.CharField(widget=forms.PasswordInput, validators=[validate_password])
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'password')
+

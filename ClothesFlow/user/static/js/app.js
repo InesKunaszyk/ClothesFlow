@@ -234,50 +234,48 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
+      const form = document.getElementById("form-data");
+      if (this.currentStep >= 5) {
+          const summary = new FormData(form)
+          document.querySelectorAll(".form-section--column ul li")[0].textContent = 'UL.' + summary.get('address').toUpperCase();
+          document.querySelectorAll(".form-section--column ul li")[1].textContent = summary.get('city').toUpperCase();
+          document.querySelectorAll(".form-section--column ul li")[2].textContent = summary.get('zip_code').toUpperCase();
+          document.querySelectorAll(".form-section--column ul li")[3].textContent = summary.get('phone_number').toUpperCase();
+          document.querySelectorAll(".form-section--column ul li")[4].textContent = summary.get('date').toUpperCase();
+          document.querySelectorAll(".form-section--column ul li")[5].textContent = summary.get('time').toUpperCase();
+          document.querySelectorAll(".form-section--column ul li")[6].textContent = 'Informacja dla kuriera:' + summary.get('more_info').toUpperCase();
+          document.getElementById("summary-quantity").textContent = summary.get('bag') + 'szt. worków'
+
+          const institution = document.getElementsByName('institution')
+              institution.forEach(function (i) {
+                if (i.checked) {
+                  const institution = i.parentElement.children[2].firstElementChild.innerHTML;
+                  document.getElementById("summary-institution").textContent = "Dla instytucji:  " + institution.toUpperCase();
+                  console.log([...summary])
+                }
+              });
+
+      };
+        //       document.getElementById("summary-institution").textContent = "Dla fundacji "  + institution.toUpperCase();
+        //       document.querySelectorAll(".form-section--column ul li")[0].textContent = 'UL.' + document.getElementById('address').value.toUpperCase();
+        //       document.querySelectorAll(".form-section--column ul li")[1].textContent = document.getElementById('city').value.toUpperCase();
+        //       document.querySelectorAll(".form-section--column ul li")[2].textContent = document.getElementById('zip_code').value.toUpperCase();
+        //       document.querySelectorAll(".form-section--column ul li")[3].textContent = document.getElementById('phone_number').value.toUpperCase();
+        //       document.querySelectorAll(".form-section--column ul li")[4].textContent = document.getElementById('pick_up_date').value.toUpperCase();
+        //       document.querySelectorAll(".form-section--column ul li")[5].textContent = document.getElementById('pick_up_time').value.toUpperCase();
+        //       document.querySelectorAll(".form-section--column ul li")[6].textContent = document.getElementById('pick_up_comment').value.toUpperCase();
+        //       document.getElementById("summary-quantity").textContent = document.getElementById('bags').value + ' szt. worków';
+        //       const institution = document.getElementsByName('institution')
+        //       institution.forEach(function (i) {
+        //       if (i.checked) {
+        //         const institution = i.parentElement.children[2].firstElementChild.innerHTML;
+        //         document.getElementById("summary-institution").textContent = "Dla fundacji "  + institution.toUpperCase();
+        // }
+        //
+        //   });
+
       // TODO: get data from inputs and show them in summary
-//       const btn = document.getElementById('donation-confirmation');
-//     btn.addEventListener('click', e => {
-//       document.getElementById("summary-quantity").textContent = document.getElementById('bags').value;
-//       document.querySelectorAll(".form-section--column ul li")[0].textContent = document.getElementById('address').value;
-//       document.querySelectorAll(".form-section--column ul li")[1].textContent = document.getElementById('city').value;
-//       document.querySelectorAll(".form-section--column ul li")[2].textContent = document.getElementById('zip_code').value;
-//       document.querySelectorAll(".form-section--column ul li")[3].textContent = document.getElementById('phone_number').value;
-//       document.querySelectorAll(".form-section--column ul li")[4].textContent = document.getElementById('pick_up_date').value;
-//       document.querySelectorAll(".form-section--column ul li")[5].textContent = document.getElementById('pick_up_time').value;
-//       document.querySelectorAll(".form-section--column ul li")[6].textContent = document.getElementById('pick_up_comment').value;
-//       const institutionInputs = document.getElementsByName('institution')
-//       institutionInputs.forEach(function (i) {
-//         if (i.checked) {
-//           const institution = i.parentElement.children[2].firstElementChild.innerHTML;
-//           document.getElementById("summary-institution").textContent = "Dla fundacji " + '"' + institution + '"';
-//     }
-//   })
-// })
 
-      const form = document.getElementById("info");
-      const btn = document.getElementById('donation-confirmation');
-
-
-      btn.addEventListener( 'click', function(e) {
-        e.preventDefault();
-
-        const summary = new FormData(form)
-
-        console.log([...summary])
-
-        fetch('conf', {
-          method: 'POST',
-          body: summary,
-        })
-            .then(response => response.json())
-            .then(data => {
-              console.log('Success:', data);
-              document.getElementById('form').value='';
-            })
-            .catch(err => {
-              console.log('Error:', err);
-            });
-      });
     }
 
     /**
@@ -286,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function() {
      * TODO: validation, send data to server
      */
     submit(e) {
-
+      e.preventDefault();
       this.currentStep++;
       this.updateForm();
     }
@@ -296,4 +294,3 @@ document.addEventListener("DOMContentLoaded", function() {
     new FormSteps(form);
   }
 });
-
