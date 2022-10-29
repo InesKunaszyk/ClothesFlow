@@ -82,7 +82,7 @@
             {% endfor %}
 
             <div class="form-group form-group--buttons">
-              <button type="submit" class="btn next-step" id="chosen-categories">Dalej</button>
+              <button type="button" class="btn next-step" id="chosen-categories">Dalej</button>
             </div>
           </div>
 
@@ -115,12 +115,12 @@
                 <input type="radio" name="institution" id="institution-id" value="{{o.id}}"/>
                 <span class="checkbox radio"></span>
                 <span class="description">
-                  <div class="title" id="institution-name">{{o.name}}</div>
+                  <div class="title" id="institution-name-id" name="institution-name" value="{{o.name}}">{{o.name}}</div>
                   <div class="subtitle">
                     {{o.description}}
-                      {% for cat in o.categories.all %}
-                      <input id="cat" value="{{ cat.id }}">
-                      {% endfor %}
+<!--                      {% for cat in o.categories.all %}-->
+<!--                      <input id="cat" value="{{ cat.id }}">-->
+<!--                      {% endfor %}-->
                   </div>
                 </span>
               </label>
@@ -201,6 +201,7 @@
                     <span class="icon icon-hand"></span>
                     <span class="summary--text" id="summary-institution"></span>
                   </li>
+                  <li></li>
                 </ul>
               </div>
 
@@ -220,6 +221,8 @@
                   <ul>
                     <li></li>
                     <li></li>
+                  </ul>
+                  <ul>
                     <li></li>
                   </ul>
                 </div>
@@ -236,3 +239,4 @@
     </section>
   {% endblock %}
 
+<!--<a href="{% url 'conf' %}"></a>-->

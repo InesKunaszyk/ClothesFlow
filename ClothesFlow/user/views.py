@@ -1,4 +1,4 @@
-
+import json
 import random
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -6,6 +6,7 @@ from django.core.exceptions import ImproperlyConfigured
 
 from django.core.paginator import Paginator
 from django.db.models import Sum, Count
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
@@ -52,6 +53,33 @@ class AddDonationView(LoginRequiredMixin, View):
         return render(request, self.template_name, {'categories': categories,
                                                     'organizations': organizations,
                                                     })
+
+    def post(self, request, *args, **kwargs):
+        summary = request.POST
+        print(summary)
+
+        return JsonResponse(summary)
+        # donation = Donation(quantity=data['bag'],
+        #                     categories=data['categories'],
+        #                     institution=data['institution'],
+        #                     address=data['address'],
+        #                     phone_number=data[''])_
+        # donation.save()
+
+        # return JsonResponse({'quantity': item.quantity, 'name': item.name})
+
+    #     print(request.body)
+    #     form = request.body
+    #     filename = 0
+    #     for ff in form:
+    #         filename += 1
+    #         with open(f"{filename}.jpg", "wb+") as f:
+    #             f.write(ff)
+    #     return JsonResponse(status=201)
+    #     # data = json.loads(request.body)
+        # response = []
+        # print(response)
+        # return JsonResponse({'response': response})
 
 
 class RegisterView(FormView):
