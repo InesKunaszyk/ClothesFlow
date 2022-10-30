@@ -12,7 +12,7 @@ from django.urls import reverse_lazy
 
 from django.views.generic import View, CreateView, FormView, UpdateView
 
-from .forms import UserCreateForm, UserLoginForm, UserProfileForm
+from .forms import UserCreateForm, UserLoginForm, UserProfileForm, NewDonationForm
 
 from .models import Donation, Institution, Category
 
@@ -44,7 +44,7 @@ class AddDonationView(LoginRequiredMixin, View):
     template_name = 'user/form.html'
     login_url = 'login'
     permission_denied_message = 'Aby przekazać dary musisz być zalogowany.'
-    redirect_field_name = 'add_donation'
+    form_class = NewDonationForm
 
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
@@ -55,31 +55,28 @@ class AddDonationView(LoginRequiredMixin, View):
                                                     })
 
     def post(self, request, *args, **kwargs):
-        summary = request.POST
-        print(summary)
+        data = request.POST
+        chosen_categories = request.POST.getlist("categories")
+        chosen_institution = data["institution"]
+        institution = Institution.objects.get(pk=chosen_institution)
+        donation_categories = Category.objects.filter(pk__in=chosen_categories)
 
-        return JsonResponse(summary)
-        # donation = Donation(quantity=data['bag'],
-        #                     categories=data['categories'],
-        #                     institution=data['institution'],
-        #                     address=data['address'],
-        #                     phone_number=data[''])_
-        # donation.save()
-
-        # return JsonResponse({'quantity': item.quantity, 'name': item.name})
-
-    #     print(request.body)
-    #     form = request.body
-    #     filename = 0
-    #     for ff in form:
-    #         filename += 1
-    #         with open(f"{filename}.jpg", "wb+") as f:
-    #             f.write(ff)
-    #     return JsonResponse(status=201)
-    #     # data = json.loads(request.body)
-        # response = []
-        # print(response)
-        # return JsonResponse({'response': response})
+       # if form_valid:
+        new_donation = Donation(
+            quantity=data["bag"],
+            address=data["address"],
+            phone_number=data["phone_number"],
+            city=data["city"],
+            zip_code=data["zip_code"],
+            pick_up_date=data["date"],
+            pick_up_time=data["time"],
+            pick_up_comment=data["more_info"],
+            institution=institution,
+            user=request.user,
+        )
+        new_donation.save()
+        new_donation.categories.set(donation_categories)
+        return redirect("conf")
 
 
 class RegisterView(FormView):
@@ -127,6 +124,7 @@ class LoginView(FormView):
 
 
 class UserLogoutView(View):
+
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect("login")

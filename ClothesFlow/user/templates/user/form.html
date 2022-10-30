@@ -60,7 +60,7 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form action="" method="post" name="form" id="form-data">
+        <form action="form-confirmation.html" method="post" name="form" id="form-data">
           {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
@@ -115,12 +115,12 @@
                 <input type="radio" name="institution" id="institution-id" value="{{o.id}}"/>
                 <span class="checkbox radio"></span>
                 <span class="description">
-                  <div class="title" id="institution-name-id" name="institution-name" value="{{o.name}}">{{o.name}}</div>
+                  <div class="title" id="institution-name-id" name="institution-name" key={{o.id}} value="{{ cat.id }}">{{o.name}}</div>
                   <div class="subtitle">
                     {{o.description}}
-<!--                      {% for cat in o.categories.all %}-->
-<!--                      <input id="cat" value="{{ cat.id }}">-->
-<!--                      {% endfor %}-->
+                      {% for cat in o.categories.all %}
+                      <input id="cat" value="{{ cat.id }}" name="inst">
+                      {% endfor %}
                   </div>
                 </span>
               </label>

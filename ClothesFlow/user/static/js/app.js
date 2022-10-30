@@ -201,6 +201,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
       });
 
+
       // Previous step
       this.$prev.forEach(btn => {
         btn.addEventListener("click", e => {
@@ -209,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function() {
           this.updateForm();
         });
       });
+
 
       // Form submit
       this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
@@ -221,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
     updateForm() {
       this.$step.innerText = this.currentStep;
 
-      // TODO: Validation
+       // TODO: Validation
 
       this.slides.forEach(slide => {
         slide.classList.remove("active");
@@ -234,10 +236,45 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
+    // /**
+    //  * FORM'S STEP 3 - filtering organizations
+    //  */
+      if (this.currentStep === 3) {
+        let institution = document.querySelectorAll("input[name=inst]");
+        let categories = document.querySelectorAll("input[name=categories]");
+        let chosenCategories = [];
+
+        categories.forEach( cat => {
+          if(cat.checked === true) {
+            chosenCategories.push(cat.value);
+          }
+        });
+
+        institution.forEach( inst => {
+          inst.parentElement.parentElement.style.display = "block";
+          let instCat = inst.value.replace(/[\[\]']+/g, '').split(",");
+          let showCat = false;
+
+          instCat.forEach( cat => {
+           if (chosenCategories.includes(cat)) {
+              showCat = true;
+           }
+        });
+          if (showCat===false) {
+            inst.parentElement.parentElement.style.display = "none";
+          }
+        });
+      }
+
+
+    /**
+     * GET DATA FROM INPUT AND SHOW IN SUMMARY
+     */
 
       const form = document.getElementById("form-data");
       if (this.currentStep >= 5) {
         const summary = new FormData(form)
+        // console.log([...summary])
         document.querySelectorAll(".form-section--column ul li")[0].textContent = 'UL.' + summary.get('address').toUpperCase();
         document.querySelectorAll(".form-section--column ul li")[1].textContent = summary.get('city').toUpperCase();
         document.querySelectorAll(".form-section--column ul li")[2].textContent = summary.get('zip_code').toUpperCase();
@@ -246,51 +283,47 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".form-section--column ul li")[5].textContent = summary.get('time').toUpperCase();
         document.querySelectorAll(".form-section--column ul li")[6].textContent = 'Informacja dla kuriera:' + summary.get('more_info').toUpperCase();
         document.getElementById("summary-quantity").textContent = summary.get('bag') + 'szt. worków'
-        // document.getElementById("summary-institution").textContent = 'Wybrana organizacja: '+summary.get('institution').toUpperCase();
+        // document.getElementById("summary-institution").textContent = 'Wybrana organizacja: '+summary.values('institution').toUpperCase();
       }
+
       const institution = document.getElementsByName('institution')
 
-        institution.forEach(function (i) {
-          if (i.checked) {
-            const institution = i.parentElement.children[2].firstElementChild.innerHTML;
-            document.getElementById("summary-institution").textContent = "Wybrana instytucja: " + institution.toUpperCase();
-          }
+      institution.forEach(function (i) {
+        if (i.checked) {
+          const institution = i.parentElement.children[2].firstElementChild.innerHTML;
+          document.getElementById("summary-institution").textContent = "Wybrana instytucja: " + institution.toUpperCase();
+        }
 
-        })
+      })
+
     }
 
-    // if (this.currentStep >= 6) {
-    // // sendData() {
-    //   const form = document.getElementById("form-data");
-    //   const summary = new FormData(form)
-    //
-    //     function getCookie(name) {
-    //       let cookie = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    //       return cookie ? cookie[2] : null;
-    //     }
-    //
-    //     fetch('/conf/', {
-    //       method: 'post',
-    //       headers: {
-    //         "X-CSRFToken": getCookie("csrf"),
-    //       },
-    //       body: summary
-    //     })
-    //         .then((res) => res.json())
-    //         .then(json => {
-    //           console.log('Success:', json);
-    //         })
-    //         .catch(err => {
-    //           console.error('Error:', err);
-    //           console.log(err)
-    //         });
-    //   }
+    /**
+     *
+     * SEND DATA TO SERVER
+     */
+    submitForm() {
+      const form = document.getElementById("form-data");
+      const summary = new FormData(form);
 
+      fetch("/add_donation/", {
+        method: "post",
+        body: summary,
+      })
+          .then((res) => res.json())
+          .then(json => {
+            console.log("Success:", json);
+          })
+          .catch( err => {
+            console.error("Error:", err);
+          })
+    }
 
     submit(e) {
       e.preventDefault();
       this.currentStep++;
       this.updateForm();
+      this.submitForm();
     }
   }
   const form = document.querySelector(".form--steps");
@@ -298,31 +331,3 @@ document.addEventListener("DOMContentLoaded", function() {
     new FormSteps(form);
   }
 });
-
-
-        // if (this.currentStep >= 6) {
-        //   function getCookie(name) {
-        //       let cookie = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-        //       return cookie ? cookie[2] : null;
-        //     }
-
-  //       const form = document.getElementById("form-data");
-  //       const summary = new FormData(form)
-  //       fetch('/conf/', {
-  //         method: 'post',
-  //         // headers: {
-  //         //   "X-CSRFToken": getCookie("csrf"),
-  //         // },
-  //         body: summary
-  //       })
-  //           .then((res) => res.json())
-  //           .then(json => {
-  //             console.log('Success:', json);
-  //           })
-  //           .catch(err => {
-  //             console.error('Error:', err);
-  //             console.log(err)
-  //           });
-  //     }
-  //   }
-  // )};

@@ -6,7 +6,7 @@ from django.core.validators import validate_email
 
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User
+from .models import User, Category, Institution, Donation
 
 User = get_user_model()
 
@@ -67,3 +67,19 @@ class UserProfileForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'email', 'password')
 
+
+class NewDonationForm(forms.ModelForm):
+    categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
+    bag = forms.IntegerField()
+    institution = forms.ModelChoiceField(queryset=Institution.objects.all())
+    address = forms.CharField()
+    city = forms.CharField()
+    zip_code = forms.CharField()
+    phone_number = forms.IntegerField()
+    date = forms.DateField()
+    time = forms.TimeField()
+    more_info = forms.Textarea()
+
+    class Meta:
+        model = Donation
+        fields = ('categories', 'bag', 'institution', 'address', 'city', 'zip_code', 'phone_number', 'pick_up_date', 'pick_up_time', 'pick_up_comment', 'user')
