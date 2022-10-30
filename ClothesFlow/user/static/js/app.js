@@ -196,10 +196,32 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$next.forEach(btn => {
         btn.addEventListener("click", e => {
           e.preventDefault();
+      //     this.currentStep++;
+      //     this.updateForm();
+      //   });
+      // });
+
+      if (this.currentStep === 1) {
+        if (categoriesValidation() === false) {
           this.currentStep++;
           this.updateForm();
-        });
+        } else {
+          alert("Musisz wybrać kategorię.")
+        }
+      } else if (parseInt(this.currentStep) === 2) {
+        let bags = document.getElementById('bags');
+        if (parseInt(bags.value) > 0) {
+          this.currentStep++;
+          this.updateForm();
+        } else {
+          alert("Niepoprawna liczba worków! Najmniejsza możliwa ilość to 1")
+        }
+      }else {
+        this.currentStep++;
+        this.updateForm();
+      }
       });
+    });
 
 
       // Previous step
@@ -223,7 +245,11 @@ document.addEventListener("DOMContentLoaded", function() {
     updateForm() {
       this.$step.innerText = this.currentStep;
 
-       // TODO: Validation
+
+      /**
+       * VALIDATION - STEP 1 - AT LEST ONE CATEGORY MUST BE CHECKED
+       */
+
 
       this.slides.forEach(slide => {
         slide.classList.remove("active");
@@ -236,36 +262,38 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
-    // /**
-    //  * FORM'S STEP 3 - filtering organizations
-    //  */
-      if (this.currentStep === 3) {
-        let institution = document.querySelectorAll("input[name=inst]");
-        let categories = document.querySelectorAll("input[name=categories]");
-        let chosenCategories = [];
+      /**
+       * FORM'S STEP 3 - filtering organizations
+       */
 
-        categories.forEach( cat => {
-          if(cat.checked === true) {
-            chosenCategories.push(cat.value);
-          }
-        });
-
-        institution.forEach( inst => {
-          inst.parentElement.parentElement.style.display = "block";
-          let instCat = inst.value.replace(/[\[\]']+/g, '').split(",");
-          let showCat = false;
-
-          instCat.forEach( cat => {
-           if (chosenCategories.includes(cat)) {
-              showCat = true;
-           }
-        });
-          if (showCat===false) {
-            inst.parentElement.parentElement.style.display = "none";
-          }
-        });
-      }
-
+        // if (this.currentStep === 3) {
+        //   let categories = document.querySelectorAll("input[name=categories]");
+        //   let institution = document.querySelectorAll("input[name=inst]");
+        //   let chosenCategories = [];
+        //
+        //   categories.forEach(cat => {
+        //     if (cat.checked) {
+        //       chosenCategories.push(cat.value);
+        //     }
+        //   });
+        //
+        //   institution.forEach(inst => {
+        //     inst.parentElement.parentElement.style.display = "block";
+        //     let instCat = inst.value.replace(/[\[\]']+/g, '').split(", ");
+        //     console.log(inst.value)
+        //     console.log(instCat)
+        //     let showCat = false;
+        //
+        //     instCat.forEach(cat => {
+        //       if (chosenCategories.includes(cat)) {
+        //         showCat = true;
+        //       }
+        //     });
+        //     if (showCat === false) {
+        //       inst.parentElement.parentElement.style.display = "none";
+        //     }
+        //   });
+        // }
 
     /**
      * GET DATA FROM INPUT AND SHOW IN SUMMARY
@@ -293,10 +321,9 @@ document.addEventListener("DOMContentLoaded", function() {
           const institution = i.parentElement.children[2].firstElementChild.innerHTML;
           document.getElementById("summary-institution").textContent = "Wybrana instytucja: " + institution.toUpperCase();
         }
+      });
 
-      })
-
-    }
+}
 
     /**
      *
@@ -331,3 +358,15 @@ document.addEventListener("DOMContentLoaded", function() {
     new FormSteps(form);
   }
 });
+
+
+function categoriesValidation() {
+    let noCategoriesChecked = true;
+    let categories = document.querySelectorAll('#category');
+    for (let category of categories) {
+      if (category.checked) {
+        noCategoriesChecked = false;
+      }
+    }
+    return noCategoriesChecked
+  }

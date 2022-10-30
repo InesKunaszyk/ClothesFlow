@@ -111,15 +111,15 @@
 
             {% for o in organizations %}
             <div class="form-group form-group--checkbox">
-              <label>
+             <label>
                 <input type="radio" name="institution" id="institution-id" value="{{o.id}}"/>
                 <span class="checkbox radio"></span>
                 <span class="description">
-                  <div class="title" id="institution-name-id" name="institution-name" key={{o.id}} value="{{ cat.id }}">{{o.name}}</div>
-                  <div class="subtitle">
-                    {{o.description}}
+
+                  <div class="title" id="institution-name-id" name="institution-name">{{o.name}}</div>
+                  <div class="subtitle">{{o.description}}
                       {% for cat in o.categories.all %}
-                      <input id="cat" value="{{ cat.id }}" name="inst">
+                      <input id="cat" value="{{ cat.id }}" name="inst"/>
                       {% endfor %}
                   </div>
                 </span>
