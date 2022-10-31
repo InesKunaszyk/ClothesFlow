@@ -196,32 +196,105 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$next.forEach(btn => {
         btn.addEventListener("click", e => {
           e.preventDefault();
-      //     this.currentStep++;
-      //     this.updateForm();
-      //   });
-      // });
 
-      if (this.currentStep === 1) {
-        if (categoriesValidation() === false) {
-          this.currentStep++;
-          this.updateForm();
-        } else {
-          alert("Musisz wybrać kategorię.")
-        }
-      } else if (parseInt(this.currentStep) === 2) {
-        let bags = document.getElementById('bags');
-        if (parseInt(bags.value) > 0) {
-          this.currentStep++;
-          this.updateForm();
-        } else {
-          alert("Niepoprawna liczba worków! Najmniejsza możliwa ilość to 1")
-        }
-      }else {
-        this.currentStep++;
-        this.updateForm();
+      /**
+       * VALIDATION - STEP 1 - AT LEST ONE CATEGORY MUST BE CHECKED
+       *              STEP 2 - AT LEAST ONE BAG MUST BE CHECKED
+       *              STEP3 - AT LEAST ONE INSTITUTION MUST BE CHECKED
+       */
+
+function categoriesValidation() {
+    let noCategoriesChecked = true;
+    let categories = document.querySelectorAll('#category-id');
+    for (let category of categories) {
+      if (category.checked) {
+        noCategoriesChecked = false;
       }
-      });
-    });
+    }
+    return noCategoriesChecked
+  }
+
+
+function institutionValidation() {
+  let noInstitutionChecked = true;
+  let institutions = document.querySelectorAll('#institution-id');
+  for (let institution of institutions) {
+    if (institution.checked) {
+      noInstitutionChecked = false;
+    }
+  }
+  return noInstitutionChecked
+}
+          if (this.currentStep === 1) {
+            if (categoriesValidation() === false) {
+              this.currentStep++;
+              this.updateForm();
+            } else {
+              alert("Musisz wybrać conajmniej jedną kategorię.")
+            }
+          }
+          else if (parseInt(this.currentStep) === 2) {
+            let bags = document.getElementById('bags');
+            if (parseInt(bags.value) > 0) {
+              this.currentStep++;
+              this.updateForm();
+            } else {
+              alert("Niepoprawna liczba worków! Najmniejsza możliwa ilość to 1")
+            }
+          }
+          else if (parseInt(this.currentStep) === 3) {
+            if (institutionValidation() === false) {
+              this.currentStep++;
+              this.updateForm();
+            } else {
+              alert("Musisz wybrać instytucję, której chcesz przekazać dary.")
+            }
+          }
+          else if (parseInt(this.currentStep) === 4) {
+            // let address = document.querySelectorAll(".form-section--column ul li")[0];
+             let address = document.forms["form-data"]["address"].value;
+            // let city = document.querySelectorAll(".form-section--column ul li")[1];
+            let city = document.forms["form-data"]["city"].value;
+            let zip_code = document.forms["form-data"]["zip_code"].value;
+            let phone_number = document.forms["form-data"]["phone_number"].value;
+            let time = document.forms["form-data"]["pick_up_time"].value;
+            let date = document.forms["form-data"]["pick_up_date"].value;
+            let date_formatted = new Date(date.replace(/-/g, '/'));
+            let today_date = new Date(Date.now());
+
+            console.log(time < "7:00")
+            if ((address !== '') &&
+                (city !== '') &&
+                (zip_code !== '') &&
+                (phone_number !== '') &&
+                (date !== '') &&
+                (time !== '')) {
+              this.currentStep++;
+              this.updateForm();
+            } else if (address === '') {
+              alert("Uzupełnij pole 'Ulica'.")
+            } else if ((city === '') || (isNaN(city) === false)) {
+              alert("Uzupełnij pole 'Miasto'. Nie używaj cyfr.")
+            } else if ((zip_code === '') || (zip_code.length !== 5) || (isNaN((zip_code)) === true)) {
+              alert("Nieprawidłowy kod pocztowy. Uzupełnij kod. (Format YYYYY)")
+            } else if ((phone_number === '') || (isNaN(phone_number) === true)) {
+              alert("Nieprawidłowy format telefonu.Wpisz numer telefonu w formacie YYYYYYYYY, np. 555444333")
+            } else if ( 7 > phone_number.length > 9) {
+              alert("Nieprawidłowa długość numeru telefonu.")
+            } else if ((date === '') || (date_formatted.getTime() < today_date.getTime())) {
+              alert("Wybierz datę odbioru.")
+            } else if ((time === '')) {
+              alert("Wybierz godzinę odbioru.")
+            } else if ("07:00" > time > "20:00") {
+              alert("Wybierz godzinę pomiędzy 7:00 a 20:00.")
+            }
+          }
+          else {
+            this.currentStep++;
+            this.updateForm();
+          }
+          });
+        });
 
 
       // Previous step
@@ -246,11 +319,6 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$step.innerText = this.currentStep;
 
 
-      /**
-       * VALIDATION - STEP 1 - AT LEST ONE CATEGORY MUST BE CHECKED
-       */
-
-
       this.slides.forEach(slide => {
         slide.classList.remove("active");
 
@@ -262,45 +330,13 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
-      /**
-       * FORM'S STEP 3 - filtering organizations
-       */
-
-        // if (this.currentStep === 3) {
-        //   let categories = document.querySelectorAll("input[name=categories]");
-        //   let institution = document.querySelectorAll("input[name=inst]");
-        //   let chosenCategories = [];
-        //
-        //   categories.forEach(cat => {
-        //     if (cat.checked) {
-        //       chosenCategories.push(cat.value);
-        //     }
-        //   });
-        //
-        //   institution.forEach(inst => {
-        //     inst.parentElement.parentElement.style.display = "block";
-        //     let instCat = inst.value.replace(/[\[\]']+/g, '').split(", ");
-        //     console.log(inst.value)
-        //     console.log(instCat)
-        //     let showCat = false;
-        //
-        //     instCat.forEach(cat => {
-        //       if (chosenCategories.includes(cat)) {
-        //         showCat = true;
-        //       }
-        //     });
-        //     if (showCat === false) {
-        //       inst.parentElement.parentElement.style.display = "none";
-        //     }
-        //   });
-        // }
 
     /**
      * GET DATA FROM INPUT AND SHOW IN SUMMARY
      */
 
       const form = document.getElementById("form-data");
-      if (this.currentStep >= 5) {
+      if (parseInt(this.currentStep) >= 5) {
         const summary = new FormData(form)
         // console.log([...summary])
         document.querySelectorAll(".form-section--column ul li")[0].textContent = 'UL.' + summary.get('address').toUpperCase();
@@ -322,8 +358,7 @@ document.addEventListener("DOMContentLoaded", function() {
           document.getElementById("summary-institution").textContent = "Wybrana instytucja: " + institution.toUpperCase();
         }
       });
-
-}
+    }
 
     /**
      *
@@ -359,14 +394,28 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-
-function categoriesValidation() {
-    let noCategoriesChecked = true;
-    let categories = document.querySelectorAll('#category');
-    for (let category of categories) {
-      if (category.checked) {
-        noCategoriesChecked = false;
-      }
-    }
-    return noCategoriesChecked
-  }
+// const categoriesInputs = document.getElementsByName('categories');
+// const institutions = document.querySelectorAll('#institution');
+// const btnChosenCat = document.getElementById('chosen-categories');
+// const divInstitutions = document.querySelectorAll('#institution-id');
+// btnChosenCat.addEventListener("click", e => {
+//   divInstitutions.forEach(function (div) {
+//     div.removeAttribute('style');
+//   });
+//   let category_checked = [];
+//   categoriesInputs.forEach(function (category) {
+//     if (category.checked) {
+//       category_checked.push(category.value);
+//     }
+//   });
+//   institutions.forEach(function(i) {
+//     const institutionCategories = i.querySelectorAll('#cat');
+//     const instCatArr = [];
+//     institutionCategories.forEach(function (j) {
+//       instCatArr.push(j.value)
+//     })
+//     if (category_checked.every(elem => instCatArr.includes(elem)) === false) {
+//       i.style.display = 'none';
+//     }
+//   });
+// })
