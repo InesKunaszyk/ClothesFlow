@@ -330,7 +330,31 @@ function institutionValidation() {
       this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
       this.$step.parentElement.hidden = this.currentStep >= 6;
 
-
+    const categoriesInputs = document.getElementsByName('categories');
+    const institutions = document.querySelectorAll('#institution');
+    const btnChosenCat = document.getElementById('chosen-categories');
+    const divInstitutions = document.querySelectorAll('#institution-id');
+    btnChosenCat.addEventListener("click", e => {
+      divInstitutions.forEach(function (div) {
+        div.removeAttribute('style');
+      });
+      let category_checked = [];
+      categoriesInputs.forEach(function (category) {
+        if (category.checked) {
+          category_checked.push(category.value);
+        }
+      });
+      institutions.forEach(function(i) {
+        const institutionCategories = i.querySelectorAll('#cat');
+        const instCatArr = [];
+        institutionCategories.forEach(function (j) {
+          instCatArr.push(j.value)
+        })
+        if (category_checked.every(elem => instCatArr.includes(elem)) === false) {
+          i.style.display = 'none';
+        }
+      });
+    })
     /**
      * GET DATA FROM INPUT AND SHOW IN SUMMARY
      */
