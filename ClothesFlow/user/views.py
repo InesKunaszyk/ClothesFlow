@@ -61,7 +61,7 @@ class AddDonationView(LoginRequiredMixin, View):
         institution = Institution.objects.get(pk=chosen_institution)
         donation_categories = Category.objects.filter(pk__in=chosen_categories)
 
-       # if form_valid:
+
         new_donation = Donation(
             quantity=data["bag"],
             address=data["address"],
@@ -173,30 +173,3 @@ class UserUpdateProfileView(UserPassesTestMixin, UpdateView):
                 return redirect('login')
 
 
-            # else:
-            #     return render(request, "user/user_update_profile.html", {"message": "Wprowadzone hasło jest błędne!"})
-
-        # valid_password = request.user.check_password(password)
-        # if user.is_authenticated and valid_password:
-
-
-        # user = User.objects.get(pk=request.user.id)
-        # first_name = request.POST['name']
-        # last_name = request.POST['surname']
-        # email = request.POST['email']
-        # valid_password = request.user.check_password(request.POST['password'])
-        #
-        # if valid_password:
-        #     user.first_name = first_name
-        #     user.last_name = last_name
-        #     user.email = email
-        #     user.save()
-        #
-        #     return redirect('login')
-        #
-        # return render(
-        #     request,
-        #     'user_update_profile.html',
-        #     context={
-        #         'message': "Wprowadzone hasło jest niepoprawne!"
-        #     })
