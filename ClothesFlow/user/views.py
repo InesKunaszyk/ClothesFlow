@@ -189,4 +189,4 @@ class ArchiveDonationView(View):
             picked_up_donation.taken_time = None
             picked_up_donation.save()
 
-        return redirect('/profile/<int:pk>')
+        return redirect('profile')

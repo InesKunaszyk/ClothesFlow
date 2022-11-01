@@ -25,12 +25,7 @@
 {% block content %}
 <div>
     <div>
-        {% for don in user_donation %}
-                {% if don.is_taken %}
-            <tr style="color: green">
-                <td>{{ don.institution }}</td>
-                <td>{{ don.quantity }}</td>
-        <h2>Przekazane dary</h2>
+        <h2>Przekazane dary{{user_donation}}ffff</h2>
         <table class="login-page">
             <thead>
                 <tr>
@@ -51,15 +46,15 @@
                 <td>bncdbhjcdjb</td>
                 <td>bncdbhjcdjb</td>
                 <td>'bncdbhjcdjb'</td>
-<!--                <td>-->
-<!--                {% for category in donation.categories.all %}-->
-<!--                    {% if forloop.last %}-->
-<!--                    {{ category }}-->
-<!--                    {% else %}-->
-<!--                    {{ category }},-->
-<!--                    {% endif %}-->
-<!--                {% endfor %}-->
-<!--                </td>-->
+                <td>
+                {% for category in donation.categories.all %}
+                    {% if forloop.last %}
+                    {{ category }}
+                    {% else %}
+                    {{ category }},
+                    {% endif %}
+                {% endfor %}
+                </td>
                 <td>{{ donation.pick_up_date }}</td>
                 <td>ODEBRANE</td>
                 <td>{{ donation.taken_time }}</td>
@@ -98,4 +93,4 @@
         </table>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}
