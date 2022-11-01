@@ -1,5 +1,7 @@
 import json
 import random
+from time import timezone
+
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ImproperlyConfigured
@@ -45,6 +47,7 @@ class AddDonationView(LoginRequiredMixin, View):
     login_url = 'login'
     permission_denied_message = 'Aby przekazać dary musisz być zalogowany.'
     form_class = NewDonationForm
+    success_url = reverse_lazy("conf")
 
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
@@ -76,7 +79,8 @@ class AddDonationView(LoginRequiredMixin, View):
         )
         new_donation.save()
         new_donation.categories.set(donation_categories)
-        return redirect("conf")
+        return redirect("/conf/")
+#     czemu nie przenosi na strone z potwierdzeniem ?
 
 
 class RegisterView(FormView):
@@ -166,5 +170,23 @@ class UserUpdateProfileView(UserPassesTestMixin, UpdateView):
             user.email = email
             user.save()
             return redirect('/profile/<int:pk>')
-
+# sprawdzic cemu jest złe przekierowane!!!!!!
         return render(request, 'user_profile.html', message="Wprowadzone hasło jest błędne.")
+
+
+class ArchiveDonationView(View):
+
+    def post(self, request, pk, *args, **kwargs):
+        picked_up_donation = request.user.donation_set.get(pk=pk)
+
+        if "picked_up_confirm" in request.POST:
+            picked_up_donation.is_taken = True
+            picked_up_donation.taken_time = timezone.now()
+            picked_up_donation.save()
+
+        if "cancel_picked_up_confirmation" in request.POST:
+            picked_up_donation.is_taken = False
+            picked_up_donation.taken_time = None
+            picked_up_donation.save()
+
+        return redirect('/profile/<int:pk>')

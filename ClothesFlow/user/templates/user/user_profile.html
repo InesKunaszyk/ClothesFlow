@@ -20,13 +20,18 @@
     </section>
 
 </header>
-{% endblock header %}
+{% endblock %}
 
 {% block content %}
 <div>
     <div>
+        {% for don in user_donation %}
+                {% if don.is_taken %}
+            <tr style="color: green">
+                <td>{{ don.institution }}</td>
+                <td>{{ don.quantity }}</td>
         <h2>Przekazane dary</h2>
-        <table>
+        <table class="login-page">
             <thead>
                 <tr>
                     <th>Nazwa</th>
@@ -37,21 +42,24 @@
                     <th>Aktualizacja</th>
                 </tr>
             </thead>
-            <tbody></tbody>
-            {% for donation in user_donations %}
-                {% if donation.is_taken %}
+            <tbody>
+            {% for don in user_donation %}
+                {% if don.is_taken %}
             <tr style="color: green">
-                <td>{{ donation.institution }}</td>
-                <td>{{ donation.quantity }}</td>
-                <td>
-                {% for category in donation.categories.all %}
-                    {% if forloop.last %}
-                    {{ category }}
-                    {% else %}
-                    {{ category }},
-                    {% endif %}
-                {% endfor %}
-                </td>
+                <td>{{ don.institution }}</td>
+                <td>{{ don.quantity }}</td>
+                <td>bncdbhjcdjb</td>
+                <td>bncdbhjcdjb</td>
+                <td>'bncdbhjcdjb'</td>
+<!--                <td>-->
+<!--                {% for category in donation.categories.all %}-->
+<!--                    {% if forloop.last %}-->
+<!--                    {{ category }}-->
+<!--                    {% else %}-->
+<!--                    {{ category }},-->
+<!--                    {% endif %}-->
+<!--                {% endfor %}-->
+<!--                </td>-->
                 <td>{{ donation.pick_up_date }}</td>
                 <td>ODEBRANE</td>
                 <td>{{ donation.taken_time }}</td>
@@ -59,7 +67,7 @@
                     <input type="submit"
                            name="cancel_picked_up_confirmation"
                            value="Anuluj potwierdzenie">
-                </form></td>
+                    </form></td>
             </tr>
                 {% endif %}
                 {% if not donation.is_taken %}
@@ -90,4 +98,4 @@
         </table>
     </div>
 </div>
-{% endblock content %}
+{% endblock %}
