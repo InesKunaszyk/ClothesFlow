@@ -61,7 +61,7 @@ class AddDonationView(LoginRequiredMixin, View):
         institution = Institution.objects.get(pk=chosen_institution)
         donation_categories = Category.objects.filter(pk__in=chosen_categories)
 
-
+       # if form_valid:
         new_donation = Donation(
             quantity=data["bag"],
             address=data["address"],
@@ -144,8 +144,9 @@ class UserProfileView(LoginRequiredMixin, CreateView):
 
 
 class UserUpdateProfileView(UserPassesTestMixin, UpdateView):
-    template_name = 'user/user_update_profile.html'
+    template_name = 'user/user_profile_update.html'
     model = User
+    template_name_suffix = '_update'
     form_class = UserProfileForm
 
     def test_func(self):
@@ -153,23 +154,17 @@ class UserUpdateProfileView(UserPassesTestMixin, UpdateView):
         return self.request.user.is_authenticated and self.request.user.pk == self.kwargs["pk"]
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            user_pk = kwargs.get("pk")
-            user = User.objects.get(pk=user_pk)
+        first_name = request.POST['name']
+        last_name = request.POST['surname']
+        email = request.POST['email']
+        user = User.objects.get(pk=request.user.pk)
+        valid_password = request.user.check_password(request.POST['password'])
 
-            cd = form.cleaned_data
-            first_name = cd.get('name')
-            last_name = cd.get('surname')
-            email = cd.get('email')
-            password = cd.get('password')
-            user = authenticate(password=password)
+        if valid_password:
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.save()
+            return redirect('/profile/<int:pk>')
 
-            if user.is_authenticated:
-                user.first_name = first_name
-                user.last_name = last_name
-                user.email = email
-                user.save()
-                return redirect('login')
-
-
+        return render(request, 'user_profile.html', message="Wprowadzone hasło jest błędne.")
