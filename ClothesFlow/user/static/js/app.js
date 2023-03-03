@@ -196,105 +196,110 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$next.forEach(btn => {
         btn.addEventListener("click", e => {
           e.preventDefault();
-
-      /**
-       * VALIDATION - STEP 1 - AT LEST ONE CATEGORY MUST BE CHECKED
-       *              STEP 2 - AT LEAST ONE BAG MUST BE CHECKED
-       *              STEP3 - AT LEAST ONE INSTITUTION MUST BE CHECKED
-       */
-
-function categoriesValidation() {
-    let noCategoriesChecked = true;
-    let categories = document.querySelectorAll('#category-id');
-    for (let category of categories) {
-      if (category.checked) {
-        noCategoriesChecked = false;
-      }
-    }
-    return noCategoriesChecked
-  }
-
-
-function institutionValidation() {
-  let noInstitutionChecked = true;
-  let institutions = document.querySelectorAll('#institution-id');
-  for (let institution of institutions) {
-    if (institution.checked) {
-      noInstitutionChecked = false;
-    }
-  }
-  return noInstitutionChecked
-}
-          if (this.currentStep === 1) {
-            if (categoriesValidation() === false) {
-              this.currentStep++;
-              this.updateForm();
-            } else {
-              alert("Musisz wybrać conajmniej jedną kategorię.")
-            }
-          }
-          else if (parseInt(this.currentStep) === 2) {
-            let bags = document.getElementById('bags');
-            if (parseInt(bags.value) > 0) {
-              this.currentStep++;
-              this.updateForm();
-            } else {
-              alert("Niepoprawna liczba worków! Najmniejsza możliwa ilość to 1")
-            }
-          }
-          else if (parseInt(this.currentStep) === 3) {
-            if (institutionValidation() === false) {
-              this.currentStep++;
-              this.updateForm();
-            } else {
-              alert("Musisz wybrać instytucję, której chcesz przekazać dary.")
-            }
-          }
-          else if (parseInt(this.currentStep) === 4) {
-            // let address = document.querySelectorAll(".form-section--column ul li")[0];
-             let address = document.forms["form-data"]["address"].value;
-            // let city = document.querySelectorAll(".form-section--column ul li")[1];
-            let city = document.forms["form-data"]["city"].value;
-            let zip_code = document.forms["form-data"]["zip_code"].value;
-            let phone_number = document.forms["form-data"]["phone_number"].value;
-            let time = document.forms["form-data"]["pick_up_time"].value;
-            let date = document.forms["form-data"]["pick_up_date"].value;
-            let date_formatted = new Date(date.replace(/-/g, '/'));
-            let today_date = new Date(Date.now());
-
-            console.log(time < "7:00")
-            if ((address !== '') &&
-                (city !== '') &&
-                (zip_code !== '') &&
-                (phone_number !== '') &&
-                (date !== '') &&
-                (time !== '')) {
-              this.currentStep++;
-              this.updateForm();
-            } else if (address === '') {
-              alert("Uzupełnij pole 'Ulica'.")
-            } else if ((city === '') || (isNaN(city) === false)) {
-              alert("Uzupełnij pole 'Miasto'. Nie używaj cyfr.")
-            } else if ((zip_code === '') || (zip_code.length !== 5) || (isNaN((zip_code)) === true)) {
-              alert("Nieprawidłowy kod pocztowy. Uzupełnij kod. (Format YYYYY)")
-            } else if ((phone_number === '') || (isNaN(phone_number) === true)) {
-              alert("Nieprawidłowy format telefonu.Wpisz numer telefonu w formacie YYYYYYYYY, np. 555444333")
-            } else if ( 7 > phone_number.length > 9) {
-              alert("Nieprawidłowa długość numeru telefonu.")
-            } else if ((date === '') || (date_formatted.getTime() < today_date.getTime())) {
-              alert("Wybierz datę odbioru.")
-            } else if ((time === '')) {
-              alert("Wybierz godzinę odbioru.")
-            } else if ("07:00" > time > "20:00") {
-              alert("Wybierz godzinę pomiędzy 7:00 a 20:00.")
-            }
-          }
-          else {
-            this.currentStep++;
-            this.updateForm();
-          }
+          this.currentStep++;
+          this.updateForm();
           });
         });
+
+
+//       /**
+//        * VALIDATION - STEP 1 - AT LEST ONE CATEGORY MUST BE CHECKED
+//        *              STEP 2 - AT LEAST ONE BAG MUST BE CHECKED
+//        *              STEP3 - AT LEAST ONE INSTITUTION MUST BE CHECKED
+//        */
+//
+// function categoriesValidation() {
+//     let noCategoriesChecked = true;
+//     let categories = document.querySelectorAll('#category-id');
+//     for (let category of categories) {
+//       if (category.checked) {
+//         noCategoriesChecked = false;
+//       }
+//     }
+//     return noCategoriesChecked
+//   }
+//
+//
+// function institutionValidation() {
+//   let noInstitutionChecked = true;
+//   let institutions = document.querySelectorAll('#institution-id');
+//   for (let institution of institutions) {
+//     if (institution.checked) {
+//       noInstitutionChecked = false;
+//     }
+//   }
+//   return noInstitutionChecked
+// }
+//           if (this.currentStep === 1) {
+//             if (categoriesValidation() === false) {
+//               this.currentStep++;
+//               this.updateForm();
+//             } else {
+//               alert("Musisz wybrać conajmniej jedną kategorię.")
+//             }
+//           }
+//           else if (parseInt(this.currentStep) === 2) {
+//             let bags = document.getElementById('bags');
+//             if (parseInt(bags.value) > 0) {
+//               this.currentStep++;
+//               this.updateForm();
+//             } else {
+//               alert("Niepoprawna liczba worków! Najmniejsza możliwa ilość to 1")
+//             }
+//           }
+//           else if (parseInt(this.currentStep) === 3) {
+//             if (institutionValidation() === false) {
+//               this.currentStep++;
+//               this.updateForm();
+//             } else {
+//               alert("Musisz wybrać instytucję, której chcesz przekazać dary.")
+//             }
+//           }
+          // else if (parseInt(this.currentStep) === 4) {
+          //   // let address = document.querySelectorAll(".form-section--column ul li")[0];
+          //    let address = document.forms["form-data"]["address"].value;
+          //   // let city = document.querySelectorAll(".form-section--column ul li")[1];
+          //   let city = document.forms["form-data"]["city"].value;
+          //   let zip_code = document.forms["form-data"]["zip_code"].value;
+          //   let phone_number = document.forms["form-data"]["phone_number"].value;
+          //   let time = document.forms["form-data"]["pick_up_time"].value;
+          //   let date = document.forms["form-data"]["pick_up_date"].value;
+          //   // let date_formatted = new Date(date.replace(/-/g, '/'));
+          //   let today_date = new Date(Date.now());
+          //
+          //   console.log(time < "7:00")
+          //   if ((address !== '') &&
+          //       (city !== '') &&
+          //       (zip_code !== '') &&
+          //       (phone_number !== '') &&
+          //       (date !== '') &&
+          //       (time !== '')) {
+          //     this.currentStep++;
+          //     this.updateForm();
+          //   } else if (address === '') {
+          //     alert("Uzupełnij pole 'Ulica'.")
+          //   } else if ((city === '') || (isNaN(city) === false)) {
+          //     alert("Uzupełnij pole 'Miasto'. Nie używaj cyfr.")
+          //   } else if ((zip_code === '') || (zip_code.length !== 5) || (isNaN((zip_code)) === true)) {
+          //     alert("Nieprawidłowy kod pocztowy. Uzupełnij kod. (Format YYYYY)")
+          //   } else if ((phone_number === '') || (isNaN(phone_number) === true)) {
+          //     alert("Nieprawidłowy format telefonu.Wpisz numer telefonu w formacie YYYYYYYYY, np. 555444333")
+          //   } else if ( 7 > phone_number.length > 9) {
+          //     alert("Nieprawidłowa długość numeru telefonu.")
+          //   } else if ((date === '') || (date_formatted.getTime() < today_date.getTime())) {
+          //     alert("Wybierz datę odbioru.")
+          //   } else if ((time === '')) {
+          //     alert("Wybierz godzinę odbioru.")
+          //   } else if ("07:00" > time > "20:00") {
+          //     alert("Wybierz godzinę pomiędzy 7:00 a 20:00.")
+          //   }
+          // }
+          // else {
+        //     this.currentStep++;
+        //     this.updateForm();
+        //   // }
+        //   });
+        // });
 
 
       // Previous step
@@ -334,6 +339,7 @@ function institutionValidation() {
     const institutions = document.querySelectorAll('#institution');
     const btnChosenCat = document.getElementById('chosen-categories');
     const divInstitutions = document.querySelectorAll('#institution-id');
+    //adEl -- > cuurrent step
     btnChosenCat.addEventListener("click", e => {
       divInstitutions.forEach(function (div) {
         div.removeAttribute('style');
@@ -399,6 +405,7 @@ function institutionValidation() {
           .then((res) => res.json())
           .then(json => {
             console.log("Success:", json);
+            // window.location - >przekierowanie - >przeglądarka ->./
           })
           .catch( err => {
             console.error("Error:", err);

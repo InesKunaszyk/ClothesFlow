@@ -46,6 +46,9 @@ class Institution(models.Model):
     type = models.CharField(max_length=2, choices=INSTITUTION_CHOICES, default='FOUNDATION', verbose_name='Rodzaj instytucji')
     categories = models.ManyToManyField(Category, verbose_name='Kategorie')
 
+    def __str__(self):
+        return self.name
+
 
 class Donation(models.Model):
     quantity = models.PositiveIntegerField()
@@ -59,5 +62,5 @@ class Donation(models.Model):
     pick_up_time = models.TimeField(null=False, blank=False, help_text='12:00')
     pick_up_comment = models.TextField(max_length=1024)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
-    is_taken = models.BooleanField(default=False)
+    is_taken = models.BooleanField(null=True, default=False)
     taken_time = models.DateTimeField(null=True)

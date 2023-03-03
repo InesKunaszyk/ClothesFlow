@@ -22,9 +22,10 @@ from user.views import (
     RegisterView,
     LoginView,
     UserLogoutView,
-    ConfirmationView,
+    DonationConfirmationView,
     UserProfileView,
-    UserUpdateProfileView,
+
+
 )
 
 
@@ -35,7 +36,6 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
-    path('conf/', ConfirmationView.as_view(), name='conf'),
+    path('conf/', DonationConfirmationView.as_view(), name='conf'),
     path('profile/<int:pk>', UserProfileView.as_view(), name='profile'),
-    path('update_profile/<int:pk>', UserUpdateProfileView.as_view(), name='update'),
     ]

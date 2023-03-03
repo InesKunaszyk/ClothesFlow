@@ -13,7 +13,15 @@
     {% block content %}
     <section class="login-page">
       <h2>Zaloguj się</h2>
-      <form action="" method="POST">
+
+       {% if message %}
+            <div>
+                <span>{{ message }}</span>
+            </div>
+       {% endif %}
+
+
+      <form method="POST">
         {%csrf_token%}
         <div class="form-group">
           <input type="email" name="email" placeholder="Email" />

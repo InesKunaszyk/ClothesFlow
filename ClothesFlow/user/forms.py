@@ -11,21 +11,10 @@ from .models import User, Category, Institution, Donation
 User = get_user_model()
 
 
-# class UserCreateForm(UserCreationForm):
-#     name = forms.CharField(max_length=50)
-#     surname = forms.CharField(max_length=50)
-#     email = forms.EmailField()
-#     password = forms.CharField(widget=forms.PasswordInput, validators=[validate_password], label='Podaj hasło')
-#     password2 = forms.CharField(widget=forms.PasswordInput, validators=[validate_password], label='Powtórz hasło')
-#
-#     class Meta:
-#         model = User
-#         fields = ('first_name', 'last_name', 'email', 'password', 'password2')
-
 class UserCreateForm(forms.ModelForm):
     name = forms.CharField(max_length=50)
     surname = forms.CharField(max_length=50)
-    email = forms.EmailField(required=True, empty_value=False)
+    email = forms.EmailField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, validators=[validate_password], label='Podaj hasło')
     password2 = forms.CharField(widget=forms.PasswordInput, validators=[validate_password], label='Powtórz hasło')
 

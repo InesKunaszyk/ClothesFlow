@@ -1,6 +1,6 @@
 import json
 import random
-from time import timezone
+
 
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -11,8 +11,9 @@ from django.db.models import Sum, Count
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils import timezone
 
-from django.views.generic import View, CreateView, FormView, UpdateView
+from django.views.generic import View, CreateView, FormView, UpdateView, ListView
 
 from .forms import UserCreateForm, UserLoginForm, UserProfileForm, NewDonationForm
 
@@ -42,7 +43,7 @@ class LandingPageView(View):
                                                     })
 
 
-class AddDonationView(LoginRequiredMixin, View):
+class AddDonationView(LoginRequiredMixin, FormView):
     template_name = 'user/form.html'
     login_url = 'login'
     permission_denied_message = 'Aby przekazać dary musisz być zalogowany.'
@@ -64,8 +65,7 @@ class AddDonationView(LoginRequiredMixin, View):
         institution = Institution.objects.get(pk=chosen_institution)
         donation_categories = Category.objects.filter(pk__in=chosen_categories)
 
-       # if form_valid:
-        new_donation = Donation(
+        new_donation = Donation.objects.create(
             quantity=data["bag"],
             address=data["address"],
             phone_number=data["phone_number"],
@@ -77,10 +77,17 @@ class AddDonationView(LoginRequiredMixin, View):
             institution=institution,
             user=request.user,
         )
-        new_donation.save()
+
         new_donation.categories.set(donation_categories)
-        return redirect("/conf/")
-#     czemu nie przenosi na strone z potwierdzeniem ?
+        new_donation.save()
+
+        return render(request, 'user/form-confirmation.html')
+
+
+class DonationConfirmationView(View):
+
+    def get(self, request):
+        return render(request, 'user/form-confirmation.html')
 
 
 class RegisterView(FormView):
@@ -116,15 +123,11 @@ class LoginView(FormView):
         password = cd.get("password")
         user = authenticate(email=email, password=password)
         login(self.request, user)
-        return super().form_valid(form)
+        return redirect('landing_page')
 
     def form_invalid(self, form):
-        cd = form.cleaned_data
-        email = cd.get("email")
-        password = cd.get("password")
-        if email not in User.objects.filter(email=email):
-            return redirect('register')
-        # else:
+        message = "Podano błędne dane. Spróbuj ponownie"
+        return HttpResponse(message)
 
 
 class UserLogoutView(View):
@@ -134,59 +137,41 @@ class UserLogoutView(View):
         return redirect("login")
 
 
-class ConfirmationView(View):
-    template_name = 'user/form-confirmation.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
-
-
-class UserProfileView(LoginRequiredMixin, CreateView):
+class UserProfileView(LoginRequiredMixin, ListView):
     template_name = 'user/user_profile.html'
     model = User
     form_class = UserProfileForm
 
+    def get_queryset(self):
+        return Donation.objects.filter(user_id=self.request.user.id)
 
-class UserUpdateProfileView(UserPassesTestMixin, UpdateView):
-    template_name = 'user/user_profile_update.html'
-    model = User
-    template_name_suffix = '_update'
-    form_class = UserProfileForm
+    def get(self, request, *args, **kwargs):
+        return super().get(self, request, *args, **kwargs)
 
-    def test_func(self):
-        # Prevents editing other profiles
-        return self.request.user.is_authenticated and self.request.user.pk == self.kwargs["pk"]
-
-    def post(self, request, *args, **kwargs):
-        first_name = request.POST['name']
-        last_name = request.POST['surname']
-        email = request.POST['email']
-        user = User.objects.get(pk=request.user.pk)
-        valid_password = request.user.check_password(request.POST['password'])
-
-        if valid_password:
-            user.first_name = first_name
-            user.last_name = last_name
-            user.email = email
-            user.save()
-            return redirect('/profile/<int:pk>')
-# sprawdzic cemu jest złe przekierowane!!!!!!
-        return render(request, 'user_profile.html', message="Wprowadzone hasło jest błędne.")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = User.objects.get(id=self.request.user.id)
+        return context
 
 
-class ArchiveDonationView(View):
-
-    def post(self, request, pk, *args, **kwargs):
-        picked_up_donation = request.user.donation_set.get(pk=pk)
-
-        if "picked_up_confirm" in request.POST:
-            picked_up_donation.is_taken = True
-            picked_up_donation.taken_time = timezone.now()
-            picked_up_donation.save()
-
-        if "cancel_picked_up_confirmation" in request.POST:
-            picked_up_donation.is_taken = False
-            picked_up_donation.taken_time = None
-            picked_up_donation.save()
-
-        return redirect('profile')
+# class ArchiveDonationView(CreateView):
+#
+#     def post(self, request, *args, **kwargs):
+#         user_pk = kwargs['pk']
+#         picked_up_donation = request.user.donation_set.get(pk=user_pk)
+#         print(user_pk)
+#         print(picked_up_donation)
+#
+#         # walidacja
+#         if "confirmation" in request.POST:
+#             picked_up_donation.is_taken = True
+#             picked_up_donation.taken_time = timezone.now()
+#             picked_up_donation.save()
+#
+#
+#         if "cancel_confirmation" in request.POST:
+#             picked_up_donation.is_taken = False
+#             picked_up_donation.taken_time = None
+#             picked_up_donation.save()
+#
+#         return redirect('profile', user_pk)

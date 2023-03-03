@@ -60,7 +60,7 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-        <form action="" method="post" name="form" id="form-data">
+        <form method="post" name="form" id="form-data">
           {% csrf_token %}
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
@@ -231,7 +231,7 @@
 
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="submit" class="btn" id="final_submit">Potwierdzam</button>
+              <button type="submit" class="btn" >Potwierdzam</button>
             </div>
           </div>
         </form>
